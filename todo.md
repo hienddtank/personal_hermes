@@ -8,14 +8,16 @@ Current assumption:
 Stable Hermes folder:
 D:\mkt\python\hermes
 
-Experimental worktree:
-D:\mkt\python\hermes-agentmemory
+Custom AgentMemory worktree:
+D:\mkt\python\hermes-personal-agentmemory
 ```
 
 Progress on branch `test-memory-agent-local`:
 
 - [x] Stable Hermes folder protected with initial Git commit and `safe-before-agentmemory` tag.
-- [x] Experimental worktree created at `D:\mkt\python\hermes-agentmemory`.
+- [x] Local `master` fast-forwarded to custom repo `origin/master`.
+- [x] Custom AgentMemory branch created at `D:\mkt\python\hermes-personal-agentmemory` from `origin/master`.
+- [x] AgentMemory updates cherry-picked onto branch `personal-hermes-agentmemory`.
 - [x] AgentMemory server started and Windows health check verified.
 - [x] Docker container access to `host.docker.internal:3111` verified.
 - [x] AgentMemory MCP config merged without overwriting existing settings.
