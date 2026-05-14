@@ -127,6 +127,7 @@ elif not token:
     print("[SKIP] No TELEGRAM_BOT_TOKEN found — no Telegram message sent")
 
 # --- Step 5: Save local log ---
+BREADCRUMB_DIR.mkdir(parents=True, exist_ok=True)
 log_path = BREADCRUMB_DIR / "health-check-latest.md"
 log_content = (
     f"# Health Check Log\n\n"

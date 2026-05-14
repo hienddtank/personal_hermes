@@ -1,9 +1,11 @@
+name: hermes
+
 services:
   hermes:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hermes-agent
+    container_name: hermes
     working_dir: /workspace
     deploy:
       resources:
@@ -39,14 +41,19 @@ services:
       OPENAI_BASE_URL: "${OPENAI_BASE_URL:-http://192.168.1.146:1234/v1}"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-dummy}"
       MODEL_NAME: "${LLM_MODEL:-qwen3.6-27b}"
+      AGENTMEMORY_URL: "http://127.0.0.1:3111"
+      AGENTMEMORY_SECRET: "${AGENTMEMORY_SECRET:-}"
+      AGENTMEMORY_OPENAI_BASE_URL: "${AGENTMEMORY_OPENAI_BASE_URL:-http://192.168.1.146:1236}"
+      AGENTMEMORY_OPENAI_EMBEDDING_MODEL: "${AGENTMEMORY_OPENAI_EMBEDDING_MODEL:-text-embedding-embeddinggemma-300m}"
+      AGENTMEMORY_OPENAI_EMBEDDING_DIMENSIONS: "${AGENTMEMORY_OPENAI_EMBEDDING_DIMENSIONS:-768}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
-        source: D:/mkt/python/hermes/hermes-home
+        source: ./hermes-home
         target: /hermes-home
       - type: bind
-        source: D:/mkt/python/hermes/workspace
+        source: ./workspace
         target: /workspace
       - type: bind
         source: D:/
@@ -59,8 +66,11 @@ services:
         target: /host/f
     ports:
       - "8642:8642"
-      - "9119:9119"
-    command: ["/bin/sh", "/workspace/startup.sh"]
+      - "127.0.0.1:9119:9119"
+      - "127.0.0.1:3111:3111"
+      - "127.0.0.1:3112:3112"
+      - "127.0.0.1:3113:13113"
+    command: ["/bin/sh", "/usr/local/bin/hermes-startup.sh"]
     restart: unless-stopped
 
   open-webui:
@@ -126,8 +136,8 @@ services:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
       interval: 5s
       timeout: 5s
-      retries: 3
-      start_period: 5s
+      retries: 12
+      start_period: 30s
     restart: unless-stopped
 
   firecrawl-postgres:
@@ -194,6 +204,8 @@ services:
 
 # Preferred ngrok mode: run ngrok.exe on the Windows host and tunnel Docker-published ports:
 #   hermes API:        http://127.0.0.1:8642
+#   hermes dashboard:  http://127.0.0.1:9119
+#   agentmemory UI:    http://127.0.0.1:3113
 #   open-webui:        http://127.0.0.1:3000
 #   firecrawl API:     http://127.0.0.1:3002
 #   vLLM API:          http://127.0.0.1:8000
@@ -219,7 +231,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
-        source: D:/mkt/python/hermes/workspace
+        source: ./workspace
         target: /workspace
       - type: bind
         source: D:/

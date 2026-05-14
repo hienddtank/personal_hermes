@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-14T04:52:41.898429",
+  "updated_at": "2026-05-14T09:13:18.886016",
   "platforms": {
     "telegram": [
       {
@@ -10,14 +10,7 @@
       }
     ],
     "discord": [],
-    "whatsapp": [
-      {
-        "id": "197551986860230@lid",
-        "name": "Annie Hoang",
-        "type": "dm",
-        "thread_id": null
-      }
-    ],
+    "whatsapp": [],
     "slack": [],
     "signal": [],
     "mattermost": [],

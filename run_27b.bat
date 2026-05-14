@@ -15,7 +15,7 @@ build\bin\Release\llama-server.exe ^
   --split-mode layer ^
   --main-gpu 0 ^
   --n-gpu-layers 999 ^
-  --tensor-split 16,12 ^
+  --tensor-split 16,10 ^
   --ctx-size 131072 ^
   --parallel 1 ^
   --batch-size 8192 ^

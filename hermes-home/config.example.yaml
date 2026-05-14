@@ -280,7 +280,7 @@ memory:
   user_profile_enabled: true
   memory_char_limit: 4000
   user_char_limit: 4000
-  provider: ''
+  provider: agentmemory
 delegation:
   model: ''
   provider: ''
@@ -412,9 +412,16 @@ smart_model_routing:
   cheap_model: {}
 TELEGRAM_HOME_CHANNEL: '6730547288'
 plugins:
-  enabled: []
+  enabled:
+  - agentmemory
 mcp_servers:
+  agentmemory:
+    command: agentmemory
+    args: ["mcp"]
+    env:
+      AGENTMEMORY_URL: "http://127.0.0.1:3111"
   codebase-memory:
+    enabled: false
     command: /usr/local/bin/codebase-memory-mcp
     args: []
     timeout: 120

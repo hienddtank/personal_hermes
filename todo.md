@@ -8,9 +8,28 @@ Current assumption:
 Stable Hermes folder:
 D:\mkt\python\hermes
 
-Experimental worktree:
-D:\mkt\python\hermes-agentmemory
+Custom AgentMemory worktree:
+D:\mkt\python\hermes-personal-agentmemory
 ```
+
+Progress on branch `test-memory-agent-local`:
+
+- [x] Stable Hermes folder protected with initial Git commit and `safe-before-agentmemory` tag.
+- [x] Local `master` fast-forwarded to custom repo `origin/master`.
+- [x] Custom AgentMemory branch created at `D:\mkt\python\hermes-personal-agentmemory` from `origin/master`.
+- [x] AgentMemory updates cherry-picked onto branch `personal-hermes-agentmemory`.
+- [x] AgentMemory server started and Windows health check verified.
+- [x] Docker container access to `host.docker.internal:3111` verified.
+- [x] AgentMemory MCP config merged without overwriting existing settings.
+- [x] AgentMemory Hermes memory-provider plugin copied to `hermes-home/plugins/agentmemory`.
+- [x] Docker Compose isolated under project `hermes-agentmemory` with container `hermes-agentmemory`.
+- [x] Experimental Hermes API published on host port `18642`; stable `8642` is not used by this test stack.
+- [x] Hermes image updated to install the `mcp` extra required by MCP stdio clients.
+- [x] Missing `codebase-memory` MCP disabled only in the experimental config to avoid unrelated MCP startup errors.
+- [x] Hermes memory provider reports `agentmemory` installed and available.
+- [x] `hermes mcp test agentmemory` connects and discovers AgentMemory memory tools.
+- [x] Hermes saved and recalled an AgentMemory test fact through the experimental API.
+- [ ] Final merge path not done.
 
 ---
 

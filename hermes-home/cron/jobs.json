@@ -25,7 +25,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-04-14T02:08:48.596272+00:00",
-      "next_run_at": "2026-05-14T08:38:15.935302+00:00",
+      "next_run_at": "2026-05-14T12:38:31.972062+00:00",
       "last_run_at": "2026-05-14T04:38:15.935302+00:00",
       "last_status": "ok",
       "last_error": null,
@@ -56,17 +56,17 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 662
+        "completed": 663
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-04-14T03:04:01.354334+00:00",
-      "next_run_at": "2026-05-14T05:00:00+00:00",
-      "last_run_at": "2026-05-14T04:02:29.969810+00:00",
-      "last_status": "ok",
-      "last_error": null,
+      "next_run_at": "2026-05-14T10:00:00+00:00",
+      "last_run_at": "2026-05-14T08:01:43.614905+00:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: Connection error.",
       "deliver": "local",
       "origin": {
         "platform": "telegram",
@@ -468,15 +468,15 @@
       "schedule_display": "every 240m",
       "repeat": {
         "times": null,
-        "completed": 51
+        "completed": 52
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-05-04T03:15:33.374715+00:00",
-      "next_run_at": "2026-05-14T08:39:15.122369+00:00",
-      "last_run_at": "2026-05-14T04:39:15.122369+00:00",
+      "next_run_at": "2026-05-14T12:42:56.799573+00:00",
+      "last_run_at": "2026-05-14T08:42:56.799573+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -509,15 +509,15 @@
       "schedule_display": "every 240m",
       "repeat": {
         "times": null,
-        "completed": 50
+        "completed": 51
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-05-04T03:16:49.692446+00:00",
-      "next_run_at": "2026-05-14T08:32:00.984078+00:00",
-      "last_run_at": "2026-05-14T04:32:00.984078+00:00",
+      "next_run_at": "2026-05-14T12:35:25.457374+00:00",
+      "last_run_at": "2026-05-14T08:35:25.457374+00:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -616,5 +616,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-05-14T04:39:15.124844+00:00"
+  "updated_at": "2026-05-14T09:00:00.922485+00:00"
 }

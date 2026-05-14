@@ -1,5 +1,8 @@
 FROM python:3.11-bookworm
 
+ARG AGENTMEMORY_VERSION=0.9.12
+ARG AGENTMEMORY_III_VERSION=0.11.2
+
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -32,13 +35,30 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get update && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g "@agentmemory/agentmemory@${AGENTMEMORY_VERSION}" \
+    && mkdir -p /tmp/iii-install \
+    && curl -fsSL "https://github.com/iii-hq/iii/releases/download/iii/v${AGENTMEMORY_III_VERSION}/iii-x86_64-unknown-linux-gnu.tar.gz" \
+        -o /tmp/iii.tar.gz \
+    && tar -xzf /tmp/iii.tar.gz -C /tmp/iii-install \
+    && find /tmp/iii-install -type f -name iii -exec install -m 0755 {} /usr/local/bin/iii \; \
+    && rm -rf /tmp/iii-install /tmp/iii.tar.gz \
+    && iii --version
+
+COPY devops/agentmemory/iii-config.yaml /opt/agentmemory/iii-config.yaml
+COPY devops/hermes/startup.sh /usr/local/bin/hermes-startup.sh
+COPY devops/hermes/tcp-proxy.py /usr/local/bin/hermes-tcp-proxy.py
+RUN chmod +x /usr/local/bin/hermes-startup.sh /usr/local/bin/hermes-tcp-proxy.py
+
 RUN pip install --no-cache-dir uv
 
 RUN git clone --depth 1 https://github.com/NousResearch/hermes-agent.git /opt/hermes-agent \
     && cd /opt/hermes-agent \
     && uv venv /opt/venv --python 3.11 \
     && . /opt/venv/bin/activate \
-    && uv pip install -e ".[cli,pty,cron,messaging]"
+    && uv pip install -e ".[cli,pty,cron,messaging,mcp,web]" \
+    && cd /opt/hermes-agent/web \
+    && npm ci \
+    && npm run build
 
 WORKDIR /workspace
 ENTRYPOINT ["/usr/bin/tini", "--"]
