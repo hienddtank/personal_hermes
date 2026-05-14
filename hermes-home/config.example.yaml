@@ -421,6 +421,7 @@ mcp_servers:
     env:
       AGENTMEMORY_URL: "http://host.docker.internal:3111"
   codebase-memory:
+    enabled: false
     command: /usr/local/bin/codebase-memory-mcp
     args: []
     timeout: 120
