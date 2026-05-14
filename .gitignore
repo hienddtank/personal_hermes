@@ -24,6 +24,11 @@ workspace/
 
 node_modules/
 
+browser-harness/
+buun-llama-cpp/
+ik_llama.cpp/
+llama.cpp-mtp/
+
 hermes-home/.env
 hermes-home/config.yaml
 hermes-home/cache/
