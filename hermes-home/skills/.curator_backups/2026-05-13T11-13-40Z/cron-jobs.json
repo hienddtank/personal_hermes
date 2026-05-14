@@ -1,0 +1,620 @@
+{
+  "jobs": [
+    {
+      "id": "d7e8b712a22d",
+      "name": "Check Forwarders Status",
+      "prompt": "Run the script ~/.hermes/scripts/check-forwarders.sh. The script writes its full output to a timestamped file in ~/.hermes/logs/forwarder-checks/.\n\nAfter running it:\n1. Find the latest file created (most recent timestamp)\n2. Read the file\n3. Reply with a VERY brief summary (just process count and any notable findings \u2014 top CPU/memory hogs if anything stands out)\n4. Send the full text file as an attachment using MEDIA:<absolute_path>\n\nDo NOT paste the raw output into the chat \u2014 that's too long for Telegram. Only summarize, then attach the file.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 240,
+        "display": "every 240m"
+      },
+      "schedule_display": "every 240m",
+      "repeat": {
+        "times": null,
+        "completed": 159
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-14T02:08:48.596272+00:00",
+      "next_run_at": "2026-05-13T12:26:57.976586+00:00",
+      "last_run_at": "2026-05-13T08:26:57.976586+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "385eba784b0a",
+      "name": "Save Chat Sessions",
+      "prompt": "Run the data collection script at /hermes-home/scripts/data_collection.py and confirm the results. If sessions were found and saved, just say 'OK \u2014 session history updated.' Otherwise explain what happened.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "data_collection.py",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 * * * *",
+        "display": "0 * * * *"
+      },
+      "schedule_display": "0 * * * *",
+      "repeat": {
+        "times": null,
+        "completed": 645
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-14T03:04:01.354334+00:00",
+      "next_run_at": "2026-05-13T12:00:00+00:00",
+      "last_run_at": "2026-05-13T11:01:35.462278+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "local",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "5ecb641c1e29",
+      "name": "Weekly Work Recap (Friday)",
+      "prompt": "You are a weekly work recap assistant for Hermes Agent. Your job is to summarize the past week's sessions, identify open threads, and flag things that need attention.\n\n## STEP 1: Gather recent session data\nRun `session_search()` with NO query \u2014 this returns your most recent 5+ sessions with titles, previews, timestamps (zero LLM cost).\n\nThen run these targeted searches to find pending/stalled items:\n- `session_search(query=\"todo OR task OR in progress OR unfinished\")` \n- `session_search(query=\"fix OR bug OR error OR issue OR problem\")`\n- `session_search(query=\"pending OR waiting OR stuck OR blocked\")`\n\n## STEP 2: Review memory state\nRead from your loaded memory context any notes about pending tasks, user preferences, or active projects. Flag anything that contradicts what you find in sessions.\n\n## STEP 3: Analyze and categorize all findings\n\n**Completed items:** Things that look finished based on session summaries (e.g., \"fixed X\", \"created Y\", \"deployed Z\")\n\n**Open threads:** Items explicitly mentioned as pending, stuck, or needing follow-up across any sessions\n\n**Recurring patterns:** Same error/topic appearing in multiple sessions \u2192 worth creating a skill for\n\n**Potential skill candidates:** Office automation needs that appeared repeatedly (e.g., if user queried the same Excel file 3 times this week)\n\n**Stale memory flags:** Anything in your memory notes that seems outdated or contradicts recent work\n\n## STEP 4: Format output clearly\n### \ud83d\udccb WEEKLY WORK RECAP \u2014 [week range dates]\n\n**\u2705 COMPLETED THIS WEEK:**\n- [item from session summary] (session date)\n- [another completed item]\n\n**\u23f3 OPEN THREADS / NEEDS ATTENTION:**\n- [stalled topic] \u2014 last mentioned on [date], context: [brief note]\n- [pending task] \u2014 what's blocking it\n\n**\ud83d\udd01 RECURRING ISSUES (worth automating):**\n- [same error/topic appearing X times] \u2014 consider creating a skill\n\n**\ud83d\udca1 POTENTIAL SKILL IDEAS:**\n- [repeated need observed] \u2192 could be a \"skill-name\" skill\n\n**\u26a0\ufe0f MEMORy FLAGS:**\n- [any stale/contradictory info found, or \"None\"]\n\n**\ud83d\udcca STATS:**\nSessions reviewed: X | Open threads: Y | Recurring issues: Z | Potential skills: W\n\n## STEP 5: No file updates needed\nJust deliver the formatted recap. The session search tools will naturally show different sessions next week.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 4",
+        "display": "0 19 * * 4"
+      },
+      "schedule_display": "0 19 * * 4",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-20T16:31:11.914979+00:00",
+      "next_run_at": "2026-05-14T19:00:00+00:00",
+      "last_run_at": "2026-05-07T19:04:11.084593+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "06c60572bec7",
+      "name": "Skill Audit Batch 1 (Mon) - General+Agents+Creative+Data",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories autonomous-ai-agents,api,data-science,creative,inference-sh,mcp,apple and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "qwen3.6-27b",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 1",
+        "display": "0 19 * * 1"
+      },
+      "schedule_display": "0 19 * * 1",
+      "repeat": {
+        "times": null,
+        "completed": 5
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-22T17:39:44.575524+00:00",
+      "next_run_at": "2026-05-18T19:00:00+00:00",
+      "last_run_at": "2026-05-11T19:01:17.468583+00:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: Connection error.",
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "af07c1f6a35c",
+      "name": "Skill Audit Batch 2 (Tue) - DevOps+Email+Gaming+GitHub+Tools",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories devops,email,gaming,github,leisure,messaging,smart-home and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "qwen3.6-27b",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 2",
+        "display": "0 19 * * 2"
+      },
+      "schedule_display": "0 19 * * 2",
+      "repeat": {
+        "times": null,
+        "completed": 4
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-22T17:40:01.207164+00:00",
+      "next_run_at": "2026-05-19T19:00:00+00:00",
+      "last_run_at": "2026-05-12T19:01:24.163881+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "082b1897894e",
+      "name": "Skill Audit Batch 3 (Wed) - Media+MLOps Core",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories media,mlops and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "qwen3.6-27b",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 3",
+        "display": "0 19 * * 3"
+      },
+      "schedule_display": "0 19 * * 3",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-22T17:40:15.677348+00:00",
+      "next_run_at": "2026-05-13T19:00:00+00:00",
+      "last_run_at": "2026-05-06T19:00:45.461973+00:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: No LLM provider configured. Run `hermes model` to select a provider, or run `hermes setup` for first-time configuration.",
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "f4ef7e7836e4",
+      "name": "Skill Audit Batch 4 (Thu) - MLOps Advanced+Productivity",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories productivity,research and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "qwen3.6-27b",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 4",
+        "display": "0 19 * * 4"
+      },
+      "schedule_display": "0 19 * * 4",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-22T17:40:50.898126+00:00",
+      "next_run_at": "2026-05-14T19:00:00+00:00",
+      "last_run_at": "2026-05-07T19:00:48.618001+00:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: No LLM provider configured. Run `hermes model` to select a provider, or run `hermes setup` for first-time configuration.",
+      "deliver": "telegram:6730547288",
+      "origin": null,
+      "last_delivery_error": null
+    },
+    {
+      "id": "2315bc54ca2a",
+      "name": "Skill Audit Batch 5 (Fri) - Research+Social+Dev+Misc",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories software-development,social-media,mathematics,note-taking,red-teaming,email,messaging,apple,inference-sh,leisure,smart-home and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "qwen3.6-27b",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 5",
+        "display": "0 19 * * 5"
+      },
+      "schedule_display": "0 19 * * 5",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-22T17:41:05.809291+00:00",
+      "next_run_at": "2026-05-15T19:00:00+00:00",
+      "last_run_at": "2026-05-08T19:01:01.976350+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram:6730547288",
+      "origin": null,
+      "last_delivery_error": null
+    },
+    {
+      "id": "1a9d1c0f4e47",
+      "name": "Skill Audit Batch 6 (Sat) - Utilities+Extras+Long-tail",
+      "prompt": "Run the skill audit script at /hermes-home/scripts/skill_audit.py with --categories docker-restart,dogfood,email-thread-analysis,embedding-session-recall,emotion-pathing,evolution-strategy-training,gpu-cloud-providers,kokoro-tts-batching,local-db-explorer,speech-models,tabular-data,travelleaders-crawler,vector-memory,vision-models,wording-resonance,yuanbao,academic-paper-downloader and report its results verbatim. If it fails, explain briefly.",
+      "skills": [],
+      "skill": null,
+      "model": "anthropic/claude-sonnet-4",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 6",
+        "display": "0 19 * * 6"
+      },
+      "schedule_display": "0 19 * * 6",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-25T09:36:00.272687+00:00",
+      "next_run_at": "2026-05-16T19:00:00+00:00",
+      "last_run_at": "2026-05-08T03:47:33.067750+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "8b4a12ba2299",
+      "name": "Skill Audit Review (Sun) - Fixes & Cleanup",
+      "prompt": "You are Hermes Agent running a weekly skill audit review and cleanup. This is a quality control cycle.\n\nTASKS:\n\n1. **Review past week's audit results** \u2014 Check if any skills were flagged as needing fixes during the Mon-Fri audits. Apply those patches now using skill_manage(action='patch').\n\n2. **Remove dead skills** \u2014 Identify any skills that are deprecated, unused, or broken beyond repair. Remove them with skill_manage(action='delete').\n\n3. **Check cron jobs** \u2014 Review all cron jobs. Pause/remove any that seem unnecessary, duplicated, or no longer needed.\n\n4. **Memory cleanup** \u2014 Check if memory section has stale entries that should be pruned.\n\nReport what you did concisely: skills patched, skills removed, cron jobs adjusted, memory cleaned.",
+      "skills": [],
+      "skill": null,
+      "model": "anthropic/claude-sonnet-4",
+      "provider": "custom",
+      "base_url": null,
+      "script": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 2 * * 0",
+        "display": "0 2 * * 0"
+      },
+      "schedule_display": "0 2 * * 0",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-25T09:36:14.791546+00:00",
+      "next_run_at": "2026-05-17T02:00:00+00:00",
+      "last_run_at": "2026-05-03T03:12:48.525304+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram:6730547288",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "e17ec7eccb32",
+      "name": "Session Review & Tracker (Weekly Sunday 6AM)",
+      "prompt": "# Session Review & Revision \u2014 Weekly Sunday 6AM\n\nYou are Hermes Agent. Your task is two-fold:\n\n## Part 1: Update Tracker\nRun this Python script to scan session files and update the tracker:\n\n```python\nimport os, json\nfrom datetime import datetime\n\nSESSIONS_DIR = \"/host/d/mkt/python/hermes/hermes-home/sessions\"\nTRACKER_PATH = \"/root/.hermes/sessions/tracker.json\"\n\nnow = datetime.utcnow()\nfiles = [f for f in os.listdir(SESSIONS_DIR) if not f.startswith('.') and not f == 'sessions.json']\n\ntracker_sessions = {}\nfor f in files:\n    fp = os.path.join(SESSIONS_DIR, f)\n    st = os.stat(fp)\n    age_days = (now - datetime.utcfromtimestamp(st.st_mtime)).days\n    is_cron = 'cron' in f.lower() or 'session_cron_' in f\n    session_type = \"cron\" if is_cron else \"normal\"\n    \n    if age_days > 30 and not is_cron:\n        status = \"discard\"\n    elif is_cron and age_days > 14:\n        status = \"archive\"\n    elif not is_cron and age_days > 7:\n        status = \"review\"\n    else:\n        status = \"keep\"\n    \n    tracker_sessions[f] = {\"status\": status, \"type\": session_type, \"age_days\": age_days, \"size_bytes\": st.st_size}\n\nsummary = {}\nfor s in tracker_sessions.values():\n    summary[s[\"status\"]] = summary.get(s[\"status\"], 0) + 1\n\ntracker = {\n    \"last_review\": now.isoformat() + \"Z\",\n    \"total_sessions\": len(tracker_sessions),\n    \"unreviewed_count\": 0,\n    \"summary\": summary,\n    \"sessions\": tracker_sessions\n}\n\nos.makedirs(os.path.dirname(TRACKER_PATH), exist_ok=True)\nwith open(TRACKER_PATH, 'w') as f:\n    json.dump(tracker, f, indent=2)\n\nprint(f\"Tracker updated. Total: {len(tracker_sessions)}\")\nprint(f\"Summary: {json.dumps(summary)}\")\n```\n\n## Part 2: Summarize Review Sessions\nRead `/root/.hermes/scripts/session_revise.py` and run it via terminal to create summaries of ~20 review sessions into `~/.hermes/hermes-home/sessions/archive/summaries/`. The script handles cursor-based resumption across runs.\n\n## Part 3: Report\nAfter both parts, report:\n- Current tracker counts (keep/review/discarded)\n- How many summaries created this run\n- Total accumulated summaries in archive/\n\nKeep the report brief \u2014 just numbers and progress.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "session_revise.py",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 6 * * 0",
+        "display": "0 6 * * 0"
+      },
+      "schedule_display": "0 6 * * 0",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-25T11:43:24.649957+00:00",
+      "next_run_at": "2026-05-17T06:00:00+00:00",
+      "last_run_at": "2026-05-03T06:02:09.563569+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "last_delivery_error": null
+    },
+    {
+      "id": "e7130f3801e0",
+      "name": "daily-embedding-ingestion",
+      "prompt": "Run the daily embedding pipeline. Execute: cd /workspace/embedding_engine && python3 daily_embed.py\n\nThis will:\n1. Embed any new conversation sessions (older than 2 hours) into long-term memory\n2. Ingest any new PDFs from ~/.hermes/pdf and /workspace/pdf into the document table\n3. Save last-run timestamp for incremental processing\n\nReport back with a summary of what was added (new sessions, new chunks).",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 23 * * *",
+        "display": "0 23 * * *"
+      },
+      "schedule_display": "0 23 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 12
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-30T15:53:40.249785+00:00",
+      "next_run_at": "2026-05-13T23:00:00+00:00",
+      "last_run_at": "2026-05-12T23:04:07.055091+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
+    },
+    {
+      "id": "451cd560db1a",
+      "name": "Unified Health Check + Breadcrumbs \u2192 Telegram",
+      "prompt": "Run the health check script at /workspace/scripts/health_push.py and report the results. If the script completed successfully, confirm it pushed a message to Telegram and saved the local log. If it failed, show the error output and suggest fixes.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 240,
+        "display": "every 240m"
+      },
+      "schedule_display": "every 240m",
+      "repeat": {
+        "times": null,
+        "completed": 46
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-04T03:15:33.374715+00:00",
+      "next_run_at": "2026-05-13T12:17:00.048749+00:00",
+      "last_run_at": "2026-05-13T08:17:00.048749+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
+    },
+    {
+      "id": "1070d68fced8",
+      "name": "Unified Health Check + Breadcrumbs \u2192 Telegram",
+      "prompt": "Run the health check script at /hermes-home/scripts/health_push.py and report the results. Confirm whether Telegram was pushed, breadcrumbs were read, and endpoints were checked. If anything failed, show the error output.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "health_push.py",
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 240,
+        "display": "every 240m"
+      },
+      "schedule_display": "every 240m",
+      "repeat": {
+        "times": null,
+        "completed": 45
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-04T03:16:49.692446+00:00",
+      "next_run_at": "2026-05-13T12:14:21.090187+00:00",
+      "last_run_at": "2026-05-13T08:14:21.090187+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
+    },
+    {
+      "id": "63455e73b4d0",
+      "name": "Meeting Reminder 9am (GMT+7)",
+      "prompt": "Remind Hien about his meeting on May 16 at 2:00 PM (GMT+7). Say: \"\ud83d\udd14 Meeting reminder \u2014 tomorrow at 2:00 PM GMT+7. Get ready!\" If today is May 16, say: \"\ud83d\udd14 Your meeting is in a few hours at 2:00 PM GMT+7.\"",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 2 * * *",
+        "display": "0 2 * * *"
+      },
+      "schedule_display": "0 2 * * *",
+      "repeat": {
+        "times": 5,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-11T05:00:10.262477+00:00",
+      "next_run_at": "2026-05-14T02:00:00+00:00",
+      "last_run_at": "2026-05-13T02:01:56.083751+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
+    },
+    {
+      "id": "bc07f0fcbc2d",
+      "name": "Meeting Reminder 5pm (GMT+7)",
+      "prompt": "Remind Hien about his meeting on May 16 at 2:00 PM (GMT+7). Say: \"\ud83d\udd14 Meeting reminder \u2014 tomorrow at 2:00 PM GMT+7. Get ready!\" If today is May 16, say: \"\ud83d\udd14 Your meeting is in a few hours at 2:00 PM GMT+7.\"",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "display": "0 10 * * *"
+      },
+      "schedule_display": "0 10 * * *",
+      "repeat": {
+        "times": 6,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-11T05:00:12.081419+00:00",
+      "next_run_at": "2026-05-14T10:00:00+00:00",
+      "last_run_at": "2026-05-13T10:02:14.050700+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "6730547288",
+        "chat_name": "Hien Dinh",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
+    }
+  ],
+  "updated_at": "2026-05-13T11:01:35.465162+00:00"
+}

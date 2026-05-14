@@ -1,0 +1,1 @@
+this is your proxy to correctly parse skills and thinking steps. you should not directly modify this unless absolutely needed. sometimes i will ask you to modify it, in those case, ask again for confirmation before applying the changes. this is a critical component of the system, and any changes should be made with caution.

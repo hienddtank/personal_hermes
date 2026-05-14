@@ -1,0 +1,118 @@
+# File: docker-compose.vllm-qwen36-override.yml
+#
+# Use with:
+#   docker compose --env-file .env -f docker-compose.yml -f docker-compose.vllm-qwen36-override.yml up -d --force-recreate vllm
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest-x86_64-cu130-ubuntu2404
+    container_name: vllm-qwen36
+
+    ipc: host
+    shm_size: "16gb"
+    gpus: all
+
+    env_file:
+      - .env
+
+    environment:
+      HF_TOKEN: "${HF_TOKEN:-}"
+      HUGGING_FACE_HUB_TOKEN: "${HF_TOKEN:-}"
+
+      VLLM_API_KEY: "${VLLM_API_KEY:-dummy}"
+
+      HF_HOME: "/vllm-cache/huggingface"
+      HUGGING_FACE_HUB_CACHE: "/vllm-cache/huggingface/hub"
+      TRANSFORMERS_CACHE: "/vllm-cache/huggingface/transformers"
+      TORCH_HOME: "/vllm-cache/torch"
+
+      CUDA_DEVICE_ORDER: "PCI_BUS_ID"
+      CUDA_VISIBLE_DEVICES: "${VLLM_CUDA_VISIBLE_DEVICES:-0,1}"
+      NVIDIA_VISIBLE_DEVICES: "${NVIDIA_VISIBLE_DEVICES:-all}"
+
+      VLLM_ATTENTION_BACKEND: "${VLLM_ATTENTION_BACKEND:-TRITON_ATTN}"
+      PYTORCH_CUDA_ALLOC_CONF: "${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
+      OMP_NUM_THREADS: "${OMP_NUM_THREADS:-8}"
+
+      NCCL_P2P_DISABLE: "${NCCL_P2P_DISABLE:-1}"
+      NCCL_IB_DISABLE: "${NCCL_IB_DISABLE:-1}"
+
+      # KV cache quantization (fp8_e4m3 = native Blackwell support, reduces memory ~50%)
+      VLLM_KV_CACHE_DTYPE: "${VLLM_KV_CACHE_DTYPE:-fp8_e4m3}"
+
+    volumes:
+      - type: bind
+        source: ./vllm-cache
+        target: /vllm-cache
+
+    ports:
+      - "8000:8000"
+
+    command:
+      # Current vLLM serve style: model as positional argument.
+      - "${VLLM_MODEL:-cyankiwi/Qwen3.6-27B-AWQ-INT4}"
+
+      - "--host"
+      - "0.0.0.0"
+
+      - "--port"
+      - "8000"
+
+      - "--api-key"
+      - "${VLLM_API_KEY:-dummy}"
+
+      - "--served-model-name"
+      - "${VLLM_SERVED_MODEL_NAME:-qwen3.6-27b}"
+
+      - "--dtype"
+      - "${VLLM_DTYPE:-auto}"
+
+      - "--quantization"
+      - "${VLLM_QUANTIZATION:-compressed-tensors}"
+
+      - "--tensor-parallel-size"
+      - "${VLLM_TP:-2}"
+
+      - "--max-model-len"
+      - "${VLLM_MAX_MODEL_LEN:-32768}"
+
+      - "--gpu-memory-utilization"
+      - "${VLLM_GPU_MEMORY_UTILIZATION:-0.78}"
+
+      - "--max-num-seqs"
+      - "${VLLM_MAX_NUM_SEQS:-1}"
+
+      - "--disable-custom-all-reduce"
+
+      # KV cache quantization for memory efficiency
+      - "--kv-cache-dtype"
+      - "${VLLM_KV_CACHE_DTYPE:-fp8_e4m3}"
+
+      # Optional CPU weight offload. Keep 0 first.
+      # This is not model storage and not the old --swap-space.
+      - "--cpu-offload-gb"
+      - "${VLLM_CPU_OFFLOAD_GB:-0}"
+
+      # Text-only mode. Remove if you need image input.
+      - "--language-model-only"
+
+      # Qwen3 reasoning parser (preserves <think>...</think> thinking template)
+      - "--reasoning-parser"
+      - "qwen3"
+
+      # Qwen MTP speculative decoding.
+      - "--speculative-config"
+      - "{\"method\":\"${VLLM_SPEC_METHOD:-mtp}\",\"num_speculative_tokens\":${VLLM_SPEC_TOKENS:-1}}"
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python3 - <<'PY'\nimport urllib.request\nurllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)\nprint('ok')\nPY"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 120
+      start_period: 90s
+
+    restart: unless-stopped

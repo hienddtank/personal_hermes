@@ -1,0 +1,12 @@
+{
+  "files": {
+    "proxy/test/samples/approved/error_sample_thinking_strip.json::sample-fingerprint-1": {
+      "category": "EMPTY_AFTER_THINKING_STRIP",
+      "file": "proxy/test/samples/approved/error_sample_thinking_strip.json",
+      "ok": true,
+      "ran_at": "2026-04-29T03:48:23Z"
+    }
+  },
+  "schema_version": 1,
+  "updated_at": "2026-04-29T03:48:23Z"
+}

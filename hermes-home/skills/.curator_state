@@ -1,0 +1,9 @@
+{
+  "last_report_path": "/hermes-home/logs/curator/20260513-111340",
+  "last_run_at": "2026-05-13T11:13:40.164581+00:00",
+  "last_run_duration_seconds": 686.87992,
+  "last_run_summary": "auto: no changes; llm: Pass complete. Here's the summary:\n\n---\n\n## Curator Pass Summary — Umbrella Consolidation\n\n### Clusters Scanned & Decisions\n\n**1. `whatsapp-*` cluster (2 skills) → CONSOLIDATED**\n- `whatsapp-bridge` and `whatsapp-setup` shared the same doma…\narchived 1 skill(s):\n  • whatsapp-bridge → whatsapp-setup\nfull report: hermes curator status\nkeep an umbrella stable: hermes curator pin whatsapp-setup",
+  "last_run_summary_shown_at": "2026-05-06T10:57:18.281122+00:00",
+  "paused": false,
+  "run_count": 3
+}

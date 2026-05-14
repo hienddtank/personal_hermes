@@ -1,0 +1,79 @@
+# Hermes Agent Docker Compose (production config)
+
+**Container path:** `/opt/hermes-agent/docker-compose.yml`
+**Host path:** `D:\mkt\python\hermes\docker-compose.yml` (or wherever the repo was cloned)
+
+This compose file defines the TWO container services that run Hermes Agent in production.
+9P mounts for D:/ and E:/ drives are configured at the Docker daemon level, NOT in this file.
+
+```yaml
+services:
+  gateway:
+    build: .
+    image: hermes-agent
+    container_name: hermes
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ~/.hermes:/opt/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+              count: 2
+              mem: "1024"
+    environment:
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+    command: ["gateway", "run"]
+
+  dashboard:
+    image: hermes-agent
+    container_name: hermes-dashboard
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - gateway
+    volumes:
+      - ~/.hermes:/opt/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+              count: 2
+              mem: "1024"
+    environment:
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+    command: ["dashboard", "--host", "127.0.0.1", "--no-open"]
+```
+
+## Key observations
+
+- **Single volume:** Only `~/.hermes:/opt/data` is mounted. All other host paths (D:/, E:/) are handled via 9P at the Docker daemon level, not compose.
+- **network_mode: host** — containers share the host network stack. No port mappings needed.
+- **GPU reservation:** `count: 2` with `mem: "1024"` allots ~1 GB VRAM per GPU. This is a soft reservation, not a hard cap — PyTorch can still OOM if it tries to allocate more.
+- **No .env file dependency** — HERMES_UID/HERMES_GID must be passed at runtime: `HERMES_UID=$(id -u) HERMES_GID=$(id -g) docker compose up -d`
+- **Gateway API server is OFF by default** — must uncomment `API_SERVER_HOST` and `API_SERVER_KEY` to enable OpenAI-compatible endpoint.
+- **HERMES_UID fallback:** If not set, defaults to 10000 (container internal user). On mismatch, file permissions in `~/.hermes` become root-owned and unreadable by the container user.
+
+## Host-to-container path mapping
+
+| Windows path | Container path | Notes |
+|---|---|---|
+| D:\ (some subtree) | /opt/hermes-agent/ | Repo root — Hermes Agent source code |
+| D:\ (some subtree) | ~/.hermes (→ /root/.hermes) | User config, skills, logs, sessions |
+| D:\ | /host/d/ | 9P mount — data drive |
+| E:\ | /host/e/ | 9P mount — wikix, ZIM files |
+
+The exact host path for the repo depends on where the user cloned Hermes Agent on D:. The `~/.hermes` volume maps to `D:\` root (based on the `$HOME` binding in the Docker Desktop file-sharing config).
+
+## Container restart detection
+
+If a user asks "did you restart?", compare session timestamps:
+- Check `last_active` of the most recent session before current
+- If gap > 60 seconds, a restart likely occurred (container stop + start)
+- Several seconds of gap with no user session = normal — the gateway reconnects after container start
+- If there's a user session immediately before with no gap, no restart happened

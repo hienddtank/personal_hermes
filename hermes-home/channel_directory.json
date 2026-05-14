@@ -1,0 +1,42 @@
+{
+  "updated_at": "2026-05-14T04:52:41.898429",
+  "platforms": {
+    "telegram": [
+      {
+        "id": "6730547288",
+        "name": "Hien Dinh",
+        "type": "dm",
+        "thread_id": null
+      }
+    ],
+    "discord": [],
+    "whatsapp": [
+      {
+        "id": "197551986860230@lid",
+        "name": "Annie Hoang",
+        "type": "dm",
+        "thread_id": null
+      }
+    ],
+    "slack": [],
+    "signal": [],
+    "mattermost": [],
+    "matrix": [],
+    "homeassistant": [],
+    "email": [],
+    "sms": [],
+    "dingtalk": [],
+    "msgraph_webhook": [],
+    "feishu": [],
+    "wecom": [],
+    "wecom_callback": [],
+    "weixin": [],
+    "bluebubbles": [],
+    "qqbot": [],
+    "yuanbao": [],
+    "google_chat": [],
+    "irc": [],
+    "line": [],
+    "teams": []
+  }
+}

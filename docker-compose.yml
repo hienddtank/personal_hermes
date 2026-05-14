@@ -1,0 +1,237 @@
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hermes-agent
+    working_dir: /workspace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      HERMES_API_TIMEOUT: "3600"
+      HERMES_STREAM_READ_TIMEOUT: "3600"
+      HERMES_STREAM_STALE_TIMEOUT: "3600"
+      HERMES_CRON_TIMEOUT: "3600"
+      HERMES_HOME: /hermes-home
+
+      API_SERVER_ENABLED: "true"
+      API_SERVER_KEY: "${HERMES_API_KEY}"
+      API_SERVER_HOST: "0.0.0.0"
+      API_SERVER_PORT: "8642"
+
+      FIRECRAWL_API_URL: "http://firecrawl-api:3002"
+
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      TELEGRAM_ALLOWED_USERS: "${TELEGRAM_ALLOWED_USERS}"
+
+      WHATSAPP_ENABLED: "true"
+      WHATSAPP_MODE: "bot"
+      WHATSAPP_ALLOWED_USERS: "${WHATSAPP_ALLOWED_USERS}"
+
+
+      # Optional: only works if your Hermes build reads these env vars.
+      # /hermes-home/config.yaml remains the primary Hermes model config.
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:-http://192.168.1.146:1234/v1}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-dummy}"
+      MODEL_NAME: "${LLM_MODEL:-qwen3.6-27b}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - type: bind
+        source: D:/mkt/python/hermes/hermes-home
+        target: /hermes-home
+      - type: bind
+        source: D:/mkt/python/hermes/workspace
+        target: /workspace
+      - type: bind
+        source: D:/
+        target: /host/d
+      - type: bind
+        source: E:/
+        target: /host/e
+      - type: bind
+        source: F:/
+        target: /host/f
+    ports:
+      - "8642:8642"
+      - "9119:9119"
+    command: ["/bin/sh", "/workspace/startup.sh"]
+    restart: unless-stopped
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    depends_on:
+      - hermes
+    ports:
+      - "3000:8080"
+    environment:
+      # Keep Open WebUI pointed at Hermes, so Hermes remains the agent gateway.
+      OPENAI_API_BASE_URL: "http://hermes:8642/v1"
+      OPENAI_API_KEY: "${HERMES_API_KEY}"
+      ENABLE_PERSISTENT_CONFIG: "False"
+
+      # If you want Open WebUI to bypass Hermes and call llama.cpp directly, change to:
+      # OPENAI_API_BASE_URL: "${OPENAI_BASE_URL:-http://192.168.1.146:1234/v1}"
+      # OPENAI_API_KEY: "${OPENAI_API_KEY:-dummy}"
+    volumes:
+      - ./open-webui-data:/app/backend/data
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: hermes-ngrok
+    profiles:
+      - ngrok
+    depends_on:
+      - hermes
+    environment:
+      NGROK_AUTHTOKEN: "${NGROK_AUTHTOKEN:-}"
+    command: ["http", "http://hermes:8642", "--log=stdout", "--inspect=true"]
+    ports:
+      - "39043:4040"
+    restart: unless-stopped
+
+  firecrawl-playwright:
+    build:
+      context: ./firecrawl-src/apps/playwright-service-ts
+    container_name: firecrawl-playwright
+    environment:
+      PORT: "3000"
+    shm_size: "1gb"
+    tmpfs:
+      - /tmp/.cache:noexec,nosuid,size=1g
+    restart: unless-stopped
+
+  firecrawl-redis:
+    image: redis:alpine
+    container_name: firecrawl-redis
+    command: ["redis-server", "--bind", "0.0.0.0"]
+    volumes:
+      - ./firecrawl-data/redis:/data
+    restart: unless-stopped
+
+  firecrawl-rabbitmq:
+    image: rabbitmq:3-management
+    container_name: firecrawl-rabbitmq
+    command: rabbitmq-server
+    volumes:
+      - ./firecrawl-data/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  firecrawl-postgres:
+    build:
+      context: ./firecrawl-src/apps/nuq-postgres
+    container_name: firecrawl-postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    volumes:
+      - ./firecrawl-data/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  firecrawl-api:
+    build:
+      context: ./firecrawl-src/apps/api
+    container_name: firecrawl-api
+    depends_on:
+      firecrawl-redis:
+        condition: service_started
+      firecrawl-playwright:
+        condition: service_started
+      firecrawl-rabbitmq:
+        condition: service_healthy
+      firecrawl-postgres:
+        condition: service_started
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "3002"
+      INTERNAL_PORT: "3002"
+      EXTRACT_WORKER_PORT: "3004"
+      WORKER_PORT: "3005"
+      ENV: "local"
+
+      USE_DB_AUTHENTICATION: "false"
+      BULL_AUTH_KEY: "${BULL_AUTH_KEY}"
+
+      REDIS_URL: "redis://firecrawl-redis:6379"
+      REDIS_RATE_LIMIT_URL: "redis://firecrawl-redis:6379"
+      PLAYWRIGHT_MICROSERVICE_URL: "http://firecrawl-playwright:3000/scrape"
+
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+      POSTGRES_HOST: "firecrawl-postgres"
+      POSTGRES_PORT: "5432"
+
+      NUQ_RABBITMQ_URL: "amqp://firecrawl-rabbitmq:5672"
+
+      # External llama.cpp / LM Studio OpenAI-compatible endpoint.
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:-http://192.168.1.146:1234/v1}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-dummy}"
+      MODEL_NAME: "${LLM_MODEL:-qwen3.6-27b}"
+
+      # Optional if you want Firecrawl search to use your SearXNG:
+      # SEARXNG_ENDPOINT: "http://192.168.1.21:8080"
+    ports:
+      - "3002:3002"
+    command: ["node", "dist/src/harness.js", "--start-docker"]
+    restart: unless-stopped
+
+# Preferred ngrok mode: run ngrok.exe on the Windows host and tunnel Docker-published ports:
+#   hermes API:        http://127.0.0.1:8642
+#   open-webui:        http://127.0.0.1:3000
+#   firecrawl API:     http://127.0.0.1:3002
+#   vLLM API:          http://127.0.0.1:8000
+#
+# Start a tunnel with:
+#   powershell -ExecutionPolicy Bypass -File .\devops\ngrok-forwarding\start-ngrok.ps1 -Port 8642
+#
+# Fallback Docker ngrok mode:
+#   $env:NGROK_AUTHTOKEN = "<token>"
+#   docker compose --profile ngrok up -d ngrok
+
+  browser-harness:
+    build:
+      context: ./browser-harness
+      dockerfile: Dockerfile.local
+    container_name: browser-harness
+    working_dir: /workspace
+    environment:
+      BU_NAME: "local-docker"
+      NO_PROXY: "localhost,127.0.0.1,host.docker.internal,hermes,open-webui,firecrawl-api,browser-harness,vllm"
+      no_proxy: "localhost,127.0.0.1,host.docker.internal,hermes,open-webui,firecrawl-api,browser-harness,vllm"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - type: bind
+        source: D:/mkt/python/hermes/workspace
+        target: /workspace
+      - type: bind
+        source: D:/
+        target: /host/d
+      - type: bind
+        source: ./browser-harness-data/chrome-profile
+        target: /tmp/chrome-profile
+    shm_size: "2gb"
+    expose:
+      - "8769"
+      - "9222"
+    command: ["python", "/usr/local/bin/bh-api.py"]
+    profiles:
+      - browser
+    restart: unless-stopped

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "error_sample_thinking_strip",
+  "timestamp": "2026-04-29T10:00:00Z",
+  "request_id": "req_sample_1",
+  "source": "live_proxy",
+  "mode": "streaming",
+  "model": "unknown",
+  "category": "EMPTY_AFTER_THINKING_STRIP",
+  "severity": "medium",
+  "status": "approved",
+  "failure": {
+    "type": "EMPTY_AFTER_THINKING_STRIP",
+    "message": "visible output vanished after removing thinking",
+    "exception_type": null,
+    "stacktrace": null
+  },
+  "request_summary": {
+    "endpoint": "/v1/chat/completions",
+    "stream": true,
+    "has_tools": false,
+    "message_count": 1,
+    "body_sha256": "sample"
+  },
+  "raw": {
+    "llama_chunks": [
+      "<think>hidden</think>"
+    ],
+    "client_chunks": [],
+    "exception_text": "",
+    "state_trace": []
+  },
+  "observed": {
+    "visible_text": "",
+    "tool_call_count": 0,
+    "has_done": true,
+    "empty_response": true,
+    "thinking_leaked": false,
+    "invalid_json": false,
+    "incomplete_tool_call": false
+  },
+  "expected_behavior": {
+    "mode": "must_not_leak_thinking",
+    "notes": "Replaying this sample must not leak thinking markers."
+  },
+  "redaction": {
+    "redacted": true,
+    "rules_applied": []
+  },
+  "fingerprint": "sample-fingerprint-1"
+}
+

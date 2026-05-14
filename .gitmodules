@@ -1,0 +1,15 @@
+[submodule "browser-harness"]
+	path = browser-harness
+	url = https://github.com/browser-use/browser-harness
+[submodule "buun-llama-cpp"]
+	path = buun-llama-cpp
+	url = https://github.com/spiritbuun/buun-llama-cpp.git
+[submodule "firecrawl-src"]
+	path = firecrawl-src
+	url = https://github.com/firecrawl/firecrawl.git
+[submodule "ik_llama.cpp"]
+	path = ik_llama.cpp
+	url = https://github.com/ikawrakow/ik_llama.cpp
+[submodule "llama.cpp-mtp"]
+	path = llama.cpp-mtp
+	url = https://github.com/am17an/llama.cpp.git

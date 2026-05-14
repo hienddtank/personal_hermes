@@ -1,0 +1,15 @@
+{
+  "cases": [
+    {
+      "category": "EMPTY_AFTER_THINKING_STRIP",
+      "file": "proxy/test/samples/approved/error_sample_thinking_strip.json",
+      "fingerprint": "sample-fingerprint-1",
+      "id": "error_sample_thinking_strip",
+      "replayable": true,
+      "status": "approved",
+      "timestamp": "2026-04-29T10:00:00Z"
+    }
+  ],
+  "generated_at": "2026-04-29T03:47:03Z",
+  "schema_version": 1
+}

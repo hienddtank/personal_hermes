@@ -1,0 +1,20 @@
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hermes-agent
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    environment:
+      HERMES_HOME: /root/.hermes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - hermes_home:/root/.hermes
+      - hermes_workspace:/workspace
+
+volumes:
+  hermes_home:
+  hermes_workspace:
