@@ -31,6 +31,7 @@ llama.cpp-mtp/
 
 hermes-home/.env
 hermes-home/config.yaml
+hermes-home/agentmemory/
 hermes-home/cache/
 hermes-home/cron/.tick.lock
 hermes-home/cron/output/

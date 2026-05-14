@@ -416,10 +416,10 @@ plugins:
   - agentmemory
 mcp_servers:
   agentmemory:
-    command: npx
-    args: ["-y", "@agentmemory/mcp"]
+    command: agentmemory
+    args: ["mcp"]
     env:
-      AGENTMEMORY_URL: "http://host.docker.internal:3111"
+      AGENTMEMORY_URL: "http://127.0.0.1:3111"
   codebase-memory:
     enabled: false
     command: /usr/local/bin/codebase-memory-mcp
