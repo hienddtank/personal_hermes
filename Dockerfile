@@ -38,7 +38,7 @@ RUN git clone --depth 1 https://github.com/NousResearch/hermes-agent.git /opt/he
     && cd /opt/hermes-agent \
     && uv venv /opt/venv --python 3.11 \
     && . /opt/venv/bin/activate \
-    && uv pip install -e ".[cli,pty,cron,messaging]"
+    && uv pip install -e ".[cli,pty,cron,messaging,mcp]"
 
 WORKDIR /workspace
 ENTRYPOINT ["/usr/bin/tini", "--"]
