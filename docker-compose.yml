@@ -43,10 +43,10 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
-        source: D:/mkt/python/hermes/hermes-home
+        source: D:/mkt/python/hermes-agentmemory/hermes-home
         target: /hermes-home
       - type: bind
-        source: D:/mkt/python/hermes/workspace
+        source: D:/mkt/python/hermes-agentmemory/workspace
         target: /workspace
       - type: bind
         source: D:/
@@ -219,7 +219,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
-        source: D:/mkt/python/hermes/workspace
+        source: D:/mkt/python/hermes-agentmemory/workspace
         target: /workspace
       - type: bind
         source: D:/
