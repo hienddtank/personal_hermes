@@ -1,9 +1,11 @@
+name: hermes-agentmemory
+
 services:
   hermes:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hermes-agent
+    container_name: hermes-agentmemory
     working_dir: /workspace
     deploy:
       resources:
@@ -58,18 +60,18 @@ services:
         source: F:/
         target: /host/f
     ports:
-      - "8642:8642"
-      - "9119:9119"
+      - "18642:8642"
+      - "19119:9119"
     command: ["/bin/sh", "/workspace/startup.sh"]
     restart: unless-stopped
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
+    container_name: open-webui-agentmemory
     depends_on:
       - hermes
     ports:
-      - "3000:8080"
+      - "13000:8080"
     environment:
       # Keep Open WebUI pointed at Hermes, so Hermes remains the agent gateway.
       OPENAI_API_BASE_URL: "http://hermes:8642/v1"
@@ -85,7 +87,7 @@ services:
 
   ngrok:
     image: ngrok/ngrok:latest
-    container_name: hermes-ngrok
+    container_name: hermes-ngrok-agentmemory
     profiles:
       - ngrok
     depends_on:
@@ -94,13 +96,13 @@ services:
       NGROK_AUTHTOKEN: "${NGROK_AUTHTOKEN:-}"
     command: ["http", "http://hermes:8642", "--log=stdout", "--inspect=true"]
     ports:
-      - "39043:4040"
+      - "39044:4040"
     restart: unless-stopped
 
   firecrawl-playwright:
     build:
       context: ./firecrawl-src/apps/playwright-service-ts
-    container_name: firecrawl-playwright
+    container_name: firecrawl-playwright-agentmemory
     environment:
       PORT: "3000"
     shm_size: "1gb"
@@ -110,7 +112,7 @@ services:
 
   firecrawl-redis:
     image: redis:alpine
-    container_name: firecrawl-redis
+    container_name: firecrawl-redis-agentmemory
     command: ["redis-server", "--bind", "0.0.0.0"]
     volumes:
       - ./firecrawl-data/redis:/data
@@ -118,7 +120,7 @@ services:
 
   firecrawl-rabbitmq:
     image: rabbitmq:3-management
-    container_name: firecrawl-rabbitmq
+    container_name: firecrawl-rabbitmq-agentmemory
     command: rabbitmq-server
     volumes:
       - ./firecrawl-data/rabbitmq:/var/lib/rabbitmq
@@ -133,7 +135,7 @@ services:
   firecrawl-postgres:
     build:
       context: ./firecrawl-src/apps/nuq-postgres
-    container_name: firecrawl-postgres
+    container_name: firecrawl-postgres-agentmemory
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
@@ -145,7 +147,7 @@ services:
   firecrawl-api:
     build:
       context: ./firecrawl-src/apps/api
-    container_name: firecrawl-api
+    container_name: firecrawl-api-agentmemory
     depends_on:
       firecrawl-redis:
         condition: service_started
@@ -188,18 +190,18 @@ services:
       # Optional if you want Firecrawl search to use your SearXNG:
       # SEARXNG_ENDPOINT: "http://192.168.1.21:8080"
     ports:
-      - "3002:3002"
+      - "13002:3002"
     command: ["node", "dist/src/harness.js", "--start-docker"]
     restart: unless-stopped
 
 # Preferred ngrok mode: run ngrok.exe on the Windows host and tunnel Docker-published ports:
-#   hermes API:        http://127.0.0.1:8642
-#   open-webui:        http://127.0.0.1:3000
-#   firecrawl API:     http://127.0.0.1:3002
+#   hermes API:        http://127.0.0.1:18642
+#   open-webui:        http://127.0.0.1:13000
+#   firecrawl API:     http://127.0.0.1:13002
 #   vLLM API:          http://127.0.0.1:8000
 #
 # Start a tunnel with:
-#   powershell -ExecutionPolicy Bypass -File .\devops\ngrok-forwarding\start-ngrok.ps1 -Port 8642
+#   powershell -ExecutionPolicy Bypass -File .\devops\ngrok-forwarding\start-ngrok.ps1 -Port 18642
 #
 # Fallback Docker ngrok mode:
 #   $env:NGROK_AUTHTOKEN = "<token>"
@@ -209,7 +211,7 @@ services:
     build:
       context: ./browser-harness
       dockerfile: Dockerfile.local
-    container_name: browser-harness
+    container_name: browser-harness-agentmemory
     working_dir: /workspace
     environment:
       BU_NAME: "local-docker"
