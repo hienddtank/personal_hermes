@@ -280,7 +280,7 @@ memory:
   user_profile_enabled: true
   memory_char_limit: 4000
   user_char_limit: 4000
-  provider: ''
+  provider: agentmemory
 delegation:
   model: ''
   provider: ''
@@ -412,8 +412,14 @@ smart_model_routing:
   cheap_model: {}
 TELEGRAM_HOME_CHANNEL: '6730547288'
 plugins:
-  enabled: []
+  enabled:
+  - agentmemory
 mcp_servers:
+  agentmemory:
+    command: npx
+    args: ["-y", "@agentmemory/mcp"]
+    env:
+      AGENTMEMORY_URL: "http://host.docker.internal:3111"
   codebase-memory:
     command: /usr/local/bin/codebase-memory-mcp
     args: []
