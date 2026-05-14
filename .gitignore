@@ -39,6 +39,7 @@ hermes-home/sandboxes/
 hermes-home/state-snapshots/
 hermes-home/memories/
 hermes-home/pairing/
+hermes-home/platforms/
 hermes-home/whatsapp/
 hermes-home/*.db
 hermes-home/*.db-shm
@@ -50,3 +51,5 @@ hermes-home/gateway_state.json
 hermes-home/processes.json
 hermes-home/.update_check
 hermes-home/.skills_prompt_snapshot.json
+hermes-home/skills/.usage.json
+hermes-home/skills/.usage.json.lock

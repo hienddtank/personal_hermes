@@ -41,6 +41,8 @@ services:
       OPENAI_BASE_URL: "${OPENAI_BASE_URL:-http://192.168.1.146:1234/v1}"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-dummy}"
       MODEL_NAME: "${LLM_MODEL:-qwen3.6-27b}"
+      AGENTMEMORY_URL: "http://host.docker.internal:3111"
+      AGENTMEMORY_SECRET: "${AGENTMEMORY_SECRET:-}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
